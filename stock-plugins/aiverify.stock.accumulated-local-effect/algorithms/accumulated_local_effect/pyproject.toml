@@ -7,10 +7,10 @@ dependencies = ["numpy==1.26.4", "pandas==2.2.2"]
 requires-python = ">=3.10,<3.12"
 dynamic = ["version"]
 
-[project.optional-dependencies]
-dev = [
-    "aiverify-test-engine[dev] @ {root:parent:parent:parent:parent:uri}/aiverify-test-engine",
-]
+#[project.optional-dependencies]
+#dev = [
+#    "aiverify-test-engine[dev] @ {root:parent:parent:parent:parent:uri}/aiverify-test-engine",
+#]
 
 [project.scripts]
 aiverify_accumulated_local_effect = "aiverify_accumulated_local_effect.__main__:main"
