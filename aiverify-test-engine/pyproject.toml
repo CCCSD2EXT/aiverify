@@ -1,6 +1,6 @@
 [project]
 name = "aiverify-test-engine"
-version = "2.0.0a1"
+version = "2.0.0a2"
 authors = [{ name = "AI Verify" }]
 description = "AI Verify Test Engine provides core interfaces, converters, data, model and plugin managers to facilitate the development of tests for AI systems. It is used as a base library for all AI Verify official stock-plugins and can be used to develop custom plugins."
 dependencies = [
@@ -13,7 +13,8 @@ dependencies = [
     "scipy==1.14.1",
     "httpx==0.26.0",
     "openapi-schema-validator==0.6.2",
-    "aiopenapi3==0.2.1",
+#    "aiopenapi3 @ git+https://github.com/commonism/aiopenapi3.git@8e9591162d1cef8cfc8e7840f34eb20c84af8c24",
+    "aiopenapi3==0.7.1",
     "aiometer==0.5.0",
     "async-timeout==4.0.3",
     "attrs==23.2.0",
@@ -24,6 +25,7 @@ dependencies = [
     "rpds-py==0.17.1",
     "setuptools==75.1.0",
     "requests==2.32.3",
+    "jmespath==1.0.1"
 ]
 readme = "README.md"
 requires-python = ">=3.10,<3.12"
@@ -45,7 +47,8 @@ all = ["aiverify-test-engine[tensorflow]", "aiverify-test-engine[gbm]"]
 
 dev = [
     "aiverify-test-engine[all]",
-    "ruff==0.7.1",
+    "black==23.10.1",
+    "isort==5.12.0",
     "pre-commit==3.5.0",
     "pytest==7.4.3",
     "coverage==7.3.2",
@@ -54,13 +57,10 @@ dev = [
     "pytest-json-report==1.5.0",
     "pytest-json==0.4.0",
     "pytest-html==4.1.1",
+    "flake8==6.1.0",
     "hatch==1.12.0",
     "anybadge==1.14.0",
 ]
-
-[tool.ruff.lint]
-preview = true
-select = ["E20", "E21", "E22", "E23", "E24", "E3", "F401", "F8"]
 
 [tool.hatch.metadata]
 allow-direct-references = true
