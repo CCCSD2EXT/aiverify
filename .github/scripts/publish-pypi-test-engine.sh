@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # This script builds and publishes the aiverify-test-engine package to PyPI or Test PyPI.
+# Run this script from the root directory of the repository.
 # Commandline arguments:
 # --publish: Publish the package to PyPI or Test PyPI. Possible values: 'test-pypi', 'pypi'.
 # To publish, please export the following environment variables before running this script:

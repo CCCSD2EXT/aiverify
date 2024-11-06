@@ -3,6 +3,7 @@
 # This script builds and publishes specified stock plugins to PyPI.
 # It iterates through each plugin directory, checks if it contains a pyproject.toml file,
 # builds the package, and publishes it to PyPI if requested.
+# Run this script from the root directory of the repository.
 # Commandline arguments:
 # --publish: Publish the packages to PyPI or Test PyPI. Possible values: 'test-pypi', 'pypi'.
 # --plugin: Specify the plugin to build and publish. If not specified, all plugins will be built and published.
