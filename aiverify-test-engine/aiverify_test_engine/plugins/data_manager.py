@@ -353,6 +353,7 @@ class DataManager:
         data = None
         serializer = None
 
+        print(f"== _try_to_deserialize_data ==")
         # Scan through all the supported serializer
         # Check that this data is one of the supported data formats and can be deserialized
         for (

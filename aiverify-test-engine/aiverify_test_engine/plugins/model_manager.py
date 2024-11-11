@@ -139,7 +139,7 @@ class ModelManager:
             logging.INFO,
             f"Attempting to read model: {model_file}",
         )
-
+        print(f"== model_manager : read_model_file ==")
         # Validate the inputs
         if (
             model_file is None
@@ -149,6 +149,7 @@ class ModelManager:
             or serializer_plugins is None
             or not isinstance(serializer_plugins, dict)
         ):
+            print(f"== model_manager : Error ==")
             error_message = (
                 f"There was an error validating the input parameters: {model_file}, "
                 f"{model_plugins}, {serializer_plugins}"
@@ -213,6 +214,8 @@ class ModelManager:
             logging.INFO,
             f"Attempting to identify model format: {type(model)}",
         )
+        print(f"== model_manager : _try_to_identify_model_format ==")
+        
         is_success, return_model_instance = ModelManager._try_to_identify_model_format(
             model_plugins, **{"model": model}
         )
@@ -260,6 +263,8 @@ class ModelManager:
         model = None
         serializer = None
 
+        print(f" == _try_to_deserialize_model == ${model_file}")
+        print(f" == _try_to_deserialize_model : serializer_plugins == ${serializer_plugins}")
         # Scan through all the supported serializer
         # Check that this model is one of the supported model formats and can be deserialized
         for (
@@ -269,6 +274,7 @@ class ModelManager:
             try:
                 temp_serializer = serializer_plugin.Plugin
                 model = temp_serializer.deserialize_data(model_file)
+                # print(f" == _try_to_deserialize_model == ${model}")
                 if model is not None:
                     is_success = True
                     serializer = temp_serializer
@@ -296,11 +302,12 @@ class ModelManager:
         """
         is_success = False
         model_instance = None
-
+        print(f"_try_to_identify_model_format {model_plugins}")
         # Scan through all the supported model formats
         # Check that this model is one of the supported model formats
         try:
             for _, model_plugin in model_plugins.items():
+                print(model_plugin.Plugin(**kwargs))
                 model_instance = model_plugin.Plugin(**kwargs)
                 if model_instance.is_supported():
                     is_success = True

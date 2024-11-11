@@ -376,7 +376,7 @@ class Plugin(IAlgorithm):
         # left is the lower interval, Right is the upper interval
         z_lower[feature_name] = [bins[i] for i in feat_bins.cat.codes]
         z_higher[feature_name] = [bins[i + 1] for i in feat_bins.cat.codes]
-
+        print("_compute_ale_continuous {[z_lower]} {dict_items_labels} ")
         # with the data points replaced with the intervals
         # now we can run the predictions for both intervals
         prediction_lower_bound = self._model_instance.predict(
@@ -511,7 +511,7 @@ class Plugin(IAlgorithm):
         ]
 
         dict_items_labels = self._data_instance.read_labels().items()
-
+        print("_compute_ale_discrete {dict_items_labels} {[data]}")
         # runs prediction on both replaced dataset
         z_upper_prediction = self._model_instance.predict(
             [z_upper[data_remove_last_group]], dict_items_labels

@@ -24,6 +24,7 @@ dependencies = [
     "rpds-py==0.17.1",
     "setuptools==75.1.0",
     "requests==2.32.3",
+    "torch>=2.0; extra == 'cpu'" 
 ]
 readme = "README.md"
 requires-python = ">=3.10,<3.12"

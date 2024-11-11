@@ -44,11 +44,12 @@ class PluginManager:
         DataPluginType.DELIMITER,
     ]
     _model_priority_list: List = [
+        ModelPluginType.PYTORCH,
         ModelPluginType.LIGHTGBM,
         ModelPluginType.XGBOOST,
         ModelPluginType.SKLEARN,
         ModelPluginType.TENSORFLOW,
-        ModelPluginType.API,
+        ModelPluginType.API
     ]
     _serializer_priority_list: List = [
         SerializerPluginType.PICKLE,
@@ -56,6 +57,7 @@ class PluginManager:
         SerializerPluginType.TENSORFLOW,
         SerializerPluginType.IMAGE,
         SerializerPluginType.DELIMITER,
+        SerializerPluginType.PYTORCH
     ]
     _pipeline_priority_list: List = [PipelinePluginType.SKLEARN]
     _plugins: Dict = {plugin_type.name: dict() for plugin_type in PluginType}
@@ -242,6 +244,7 @@ class PluginManager:
         """
         # Pass the information to DataManager to process and return the detected data instance
         filename = arguments.get("filename", "")
+        print(f" == _get_data_serializer_instance ==  ${filename}")
         (
             is_success,
             data_instance,
@@ -282,7 +285,7 @@ class PluginManager:
         """
         # Pass the information to ModelManager to process and return the detected model instance
         model_mode = arguments.get("mode", ModelModeType.UPLOAD)
-
+        print(f"plugins_manager: _get_model_serializer_instance: model_mode : ${model_mode}")
         # Process differently if it is API, or UPLOAD.
         if model_mode is ModelModeType.API:
             api_schema = arguments.get("api_schema", dict())
@@ -307,6 +310,7 @@ class PluginManager:
 
         else:
             filename = arguments.get("filename", "")
+            print(f"plugins_manager: _get_model_serializer_instance: filename : {filename}")
             (
                 is_success,
                 model_instance,
@@ -421,6 +425,7 @@ class PluginManager:
             if plugin_type is PluginType.DATA:
                 return PluginManager._plugins[PluginType.DATA.name]
             elif plugin_type is PluginType.MODEL:
+                print(f" == _get_plugins_by_type == {PluginManager._plugins[PluginType.MODEL.name]} ")
                 return PluginManager._plugins[PluginType.MODEL.name]
             elif plugin_type is PluginType.PIPELINE:
                 return PluginManager._plugins[PluginType.PIPELINE.name]
