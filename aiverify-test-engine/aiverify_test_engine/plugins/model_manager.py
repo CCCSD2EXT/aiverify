@@ -219,6 +219,7 @@ class ModelManager:
         is_success, return_model_instance = ModelManager._try_to_identify_model_format(
             model_plugins, **{"model": model}
         )
+        print(f"== model_manager : return_model_instance == {return_model_instance}" )
         if is_success:
             error_message = ""
             log_message(
@@ -274,6 +275,7 @@ class ModelManager:
             try:
                 temp_serializer = serializer_plugin.Plugin
                 model = temp_serializer.deserialize_data(model_file)
+                print(f" == model after deserialize_data : { model}")
                 # print(f" == _try_to_deserialize_model == ${model}")
                 if model is not None:
                     is_success = True

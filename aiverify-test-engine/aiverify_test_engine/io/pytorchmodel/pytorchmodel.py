@@ -9,6 +9,7 @@ from aiverify_test_engine.plugins.metadata.plugin_metadata import PluginMetadata
 import numpy as np
 import pandas as pd
 import torch
+import torch.nn as nn
 from torch.nn.functional import softmax
 
 
@@ -126,6 +127,17 @@ class Plugin(IModel):
 
         return is_algorithm_supported
 
+    def predict_latest(self, data: Any, *args) -> Any:
+        print(f"data : {data}")
+        data_tensor = torch.tensor(data, dtype=torch.float32)
+
+        print(f"data_tensor : {data_tensor}")
+        self._model.eval() 
+        with torch.no_grad():  # Disable gradient calculation
+            predictions = self._model(data_tensor)
+            print(f"predictions {predictions}")
+            return predictions
+        
     def predict_working(self, data: Any, *args) -> Any:
         """
         A method to perform prediction using the model (classification)
@@ -249,53 +261,30 @@ class Plugin(IModel):
                 # Convert the list to a NumPy array
                 data_list = np.array(data, dtype=np.float32)
 
-                print(f"data_list : {data_list}")
-
-                # df = pd.DataFrame(data)
-                # print(f"data_list : {df}")
-                # # Convert DataFrame to a NumPy array, then to a PyTorch tensor
-                # np_array = df.to_numpy()
-                # if data_tensor.dim() == 3:
-                #     data_tensor = data_tensor.squeeze(0) 
-
-                # data_tensor = torch.tensor(np_array, dtype=torch.float32)
+                print(f"np array : {data_list}")
 
 
                 # Convert the NumPy array to a PyTorch tensor
                 data_tensor = torch.tensor(data_list, dtype=torch.float32).squeeze(0)
 
-                # data_tensor = torch.tensor([
-                #     [0.5488, 0.7152, 0.6028, 0.5449, 0.4237],
-                #     [0.6459, 0.4376, 0.8918, 0.9637, 0.3834],
-                #     [0.7917, 0.5289, 0.5680, 0.9256, 0.0710],
-                #     [0.0871, 0.0202, 0.8326, 0.7782, 0.8700],
-                #     [0.9786, 0.7992, 0.4615, 0.7805, 0.1183],
-                #     [0.6399, 0.1434, 0.9447, 0.5218, 0.4147],
-                #     [0.2646, 0.7742, 0.4562, 0.5684, 0.0188],
-                #     [0.6176, 0.6121, 0.6169, 0.9437, 0.6818],
-                #     [0.3595, 0.4370, 0.6976, 0.0602, 0.6668],
-                #     [0.6706, 0.2104, 0.1289, 0.3154, 0.3637]
-                # ], dtype=torch.float32)
+                print(f" data_tensor : {data_tensor}")
 
-
-                print(f"data_list : data_tensor : {data_tensor}")
-
-
-                # data_tensor = torch.tensor(data.values, dtype=torch.float32)
             else:
                 raise ValueError("Unsupported data format. Provide a list or pandas DataFrame.")
 
-             # Confirm data_tensor shape matches the input size of the model
-            # if data_tensor.ndim == 1:
-            #     data_tensor = data_tensor.unsqueeze(0)  # Add batch dimension if only one sample
 
-            # if data_tensor.shape[1] != 5:
-            #     raise ValueError(f"Data has {data_tensor.shape[1]} features, but model expects {5} features.")
+            print(f"self._model {self._model}")
+            torch.set_num_threads(1)
 
-            # print(f"data_tensor.shape[1] : {data_tensor.shape[1]}")
-
-            # Set the model to evaluation mode
+            # device = torch.device("cpu")
+            # data_tensor = data_tensor.to(device)
+            # self._model.to(device)
+            
+            print(f"pymodel : setting to eval")
+            # self._model.load(torch.load("/Users/sureshjain/Desktop/pytorch/1_model.pth"))
             self._model.eval()
+            
+
         
             # Ensure that predictions are made without gradient tracking
             with torch.no_grad():
@@ -308,9 +297,43 @@ class Plugin(IModel):
                     return prediction
                 else:
                     # Batch prediction
-                    print("predict else")
-                    predictions = self._model(data_tensor).numpy()
-                    print("Predicted probabilities else :", predictions)
+                    print("predict else part ")
+                    print(data_tensor.size())
+                    print(f"dtype : {data_tensor.dtype}")
+                    print("===========")
+                    
+                    print("===========")
+
+                    # input_size = 5  # Number of features in your tabular data
+                    # hidden_size = 10
+                    # output_size = 3  # Number of classes for classification
+
+                    # Create the model using torch.nn.Sequential
+                    # model = nn.Sequential(
+                    #     nn.Linear(input_size, hidden_size),
+                    #     nn.ReLU(),
+                    #     nn.Linear(hidden_size, output_size),
+                    #     nn.Softmax(dim=1)  # Softmax for classification probabilities
+                    # )
+
+                    # data_tensor = torch.tensor([[0.5488, 0.7152, 0.6028, 0.5449, 0.4237],
+                    #     [0.6459, 0.4376, 0.8918, 0.9637, 0.3834],
+                    #     [0.7917, 0.5289, 0.5680, 0.9256, 0.0710],
+                    #     [0.0871, 0.0202, 0.8326, 0.7782, 0.8700],
+                    #     [0.9786, 0.7992, 0.4615, 0.7805, 0.1183],
+                    #     [0.6399, 0.1434, 0.9447, 0.5218, 0.4147],
+                    #     [0.2646, 0.7742, 0.4562, 0.5684, 0.0188],
+                    #     [0.6176, 0.6121, 0.6169, 0.9437, 0.6818],
+                    #     [0.3595, 0.4370, 0.6976, 0.0602, 0.6668],
+                    #     [0.6706, 0.2104, 0.1289, 0.3154, 0.3637]])
+                    # data_tensor = data_tensor.to(device)
+
+                    # torch.set_num_threads(1)
+                    predictions = self._model(data_tensor)
+                    print(f"predictions : {predictions}")
+
+                    predictions = predictions.numpy()
+                    print("Predicted np :", predictions)
                     return predictions
 
         except Exception as e:
@@ -401,3 +424,4 @@ class Plugin(IModel):
                 is_success = True
 
         return is_success, model_algorithm
+    

@@ -11,6 +11,7 @@ from aiverify_test_engine.plugins.metadata.plugin_metadata import PluginMetadata
 # from tensorflow import keras
 import numpy as np
 import torch
+import torch.nn as nn
 from scipy.io import loadmat
 
 
@@ -64,11 +65,7 @@ class Plugin(ISerializer):
             print(f" == inside pytorch deserializer data_path == {data_path}")
             # data = np.load(data_path)
 
-            # # Convert data to tensor for PyTorch
-            # data_tensor = torch.tensor(data, dtype=torch.float32)
-
-            # return data_tensor
-            return torch.load(data_path)        
+            return torch.load(data_path, weights_only=False)        
         
         except Exception as e :
             print(f" deserialize error: ${e} ")
