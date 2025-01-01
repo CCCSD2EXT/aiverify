@@ -14,6 +14,14 @@ const nextConfig = {
         source: '/api/test_models/:id',
         destination: `${process.env.APIGW_HOST}/test_models/:id`,
       },
+      {
+        source: '/api/test_models/exportModelAPI/:id',
+        destination: `${process.env.APIGW_HOST}/test_models/exportModelAPI/:id`,
+      },
+      {
+        source: '/api/test_models/download/:id',
+        destination: `${process.env.APIGW_HOST}/test_models/download/:id`,
+      },
     ];
   },
 };
