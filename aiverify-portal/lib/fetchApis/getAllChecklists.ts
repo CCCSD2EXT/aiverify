@@ -1,14 +1,14 @@
-import { TestResults } from "@/app/types";
+import { Checklist } from '@/app/inputs/utils/types';
 
-export async function getChecklists(): Promise<TestResults[]> {
-    const res = await fetch(`http://127.0.0.1:4000/input_block_data/`, { //extract to /lib/fetchapis/
-      cache: 'no-store', //might no need this
-    });
-  
-    if (!res.ok) {
-      throw new Error('Failed to fetch test results');
-    }
-  
-    return res.json();
+export async function getChecklists(): Promise<Checklist[]> {
+  const res = await fetch(`http://127.0.0.1:4000/input_block_data/`, {
+    //extract to /lib/fetchapis/
+    cache: 'no-store', //might no need this
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch inputs');
   }
-  
+
+  return res.json();
+}

@@ -1,12 +1,16 @@
-// portal/app/results/page.tsx
 import { Icon, IconName } from '@/lib/components/IconSVG';
 import { getChecklists } from '@/lib/fetchApis/getAllChecklists';
 import ActionButtons from '@/app/inputs/checklists/components/ActionButtons';
 import Link from 'next/link';
-
+import { ChevronLeftIcon } from '@/app/inputs/utils/icons';
+import GroupList from './components/GroupList';
 
 export default async function ResultsPage() {
-  const checkLists = await getChecklists();
+  const checklists = await getChecklists();
+
+  const handleGroupSelect = (groupName: string) => {
+    console.log('Selected group:', groupName);
+  };
 
   return (
     <div className="p-6">
@@ -19,16 +23,28 @@ export default async function ResultsPage() {
             color="#FFFFFF"
           />
           <div className="ml-3">
-            <div className='flex'>
-            <Link href="/inputs/"><h1 className="text-2xl font-bold text-white hover:underline">User Inputs</h1></Link>
-            <h1 className='text-2xl font-bold text-white'>AI Verify Process Checklists</h1>
+            <div className="flex">
+              <Link href="/inputs/">
+                <h1 className="text-2xl font-bold text-white hover:underline">
+                  User Inputs
+                </h1>
+              </Link>
+              <ChevronLeftIcon
+                size={28}
+                color="#FFFFFF"
+              />
+              <h1 className="text-2xl font-bold text-white">
+                AI Verify Process Checklists
+              </h1>
             </div>
-            <h3 className="text-white">Manage and view AI Verify Process Checklists</h3>
+            <h3 className="text-white">
+              Manage and view AI Verify Process Checklists
+            </h3>
           </div>
         </div>
-
         <ActionButtons />
       </div>
+      <GroupList checklists={checklists} />
     </div>
   );
 }
