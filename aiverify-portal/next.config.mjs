@@ -12,7 +12,7 @@ const nextConfig = {
       },
       {
         source: '/api/input_block_data/:id',
-        destination: `${process.env.APIGW_HOST}/input_block_date/:id`,
+        destination: `${process.env.APIGW_HOST}/input_block_data/:id`,
       },
       {
         source: '/api/plugins/:gid/bundle/:cid',

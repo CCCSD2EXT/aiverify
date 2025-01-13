@@ -45,7 +45,7 @@ const GroupDetail: React.FC<GroupDetailProps> = ({ groupName }) => {
       </div>
       {groupChecklists.map((checklist) => (
         <Card
-          key={groupName}
+          key={checklist.id}
           size="md"
           className="mb-4 w-full cursor-pointer shadow-md transition-shadow duration-200 hover:shadow-lg"
           style={{

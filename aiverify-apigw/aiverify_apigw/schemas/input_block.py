@@ -83,6 +83,11 @@ class InputBlockData(BaseModel):
         min_length=1,
         max_length=128,
     )
+    group: str = Field(  # Added the group field with validation
+        description="Unique group identifier to ensure each group contains unique checklists",
+        min_length=1,
+        max_length=128,
+    )
     data: dict = Field(description="User data")
 
     model_config = {
@@ -131,6 +136,7 @@ class InputBlockDataOutput(InputBlockData):
             gid=result.gid,
             cid=result.cid,
             name=result.name,
+            group=result.group,
             data=json.loads(result.data.decode("utf-8")),
             created_at=result.created_at,
             updated_at=result.updated_at,

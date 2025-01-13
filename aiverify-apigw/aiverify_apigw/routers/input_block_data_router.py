@@ -26,11 +26,24 @@ def create_input_block_data(ibdata: InputBlockData, session: Session = Depends(g
         if not inputblock:
             raise HTTPException(status_code=400, detail=f"InputBlock cid {ibdata.cid} not found")
         
+        existing_entry = session.query(InputBlockDataModel).filter(
+             InputBlockDataModel.gid == ibdata.gid,
+             InputBlockDataModel.cid == ibdata.cid,
+             InputBlockDataModel.group == ibdata.group
+        ).first()
+ 
+        if existing_entry:
+            raise HTTPException(
+                status_code=400, 
+                detail=f"A checklist with gid '{ibdata.gid}', cid '{ibdata.cid}', and group '{ibdata.group}' already exists."
+            )
+        
         now = datetime.now(timezone.utc)
         new_input_block_data = InputBlockDataModel(
             name=ibdata.name,
             gid=ibdata.gid,
             cid=ibdata.cid,
+            group=ibdata.group,
             data=json.dumps(ibdata.data).encode('utf-8'),
             inputblock=inputblock,
             created_at=now,
