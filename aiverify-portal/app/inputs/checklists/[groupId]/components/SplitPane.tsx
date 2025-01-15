@@ -7,13 +7,11 @@ type SplitPaneProps = {
 
 export default function SplitPane({ leftPane, rightPane }: SplitPaneProps) {
   return (
-    <div className="flex h-[calc(100vh-150px)]">
+    <div className="flex h-full">
       {/* Left pane adjusted for better fit */}
-      <div className="flex-shrink-0 flex-grow basis-2/5 p-2">{leftPane}</div>
+      <div className="basis-1/4 p-2">{leftPane}</div>
       {/* Right pane adjusted for proper alignment */}
-      <div className="flex-shrink-0 flex-grow basis-3/5 overflow-y-auto p-3">
-        {rightPane}
-      </div>
+      <div className="basis-3/4 overflow-y-auto p-3">{rightPane}</div>
     </div>
   );
 }

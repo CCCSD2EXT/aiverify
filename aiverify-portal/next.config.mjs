@@ -18,6 +18,10 @@ const nextConfig = {
         source: '/api/plugins/:gid/bundle/:cid',
         destination: `${process.env.APIGW_HOST}/plugins/:gid/bundle/:cid`,
       },
+      {
+        source: '/api/plugins/:gid/summary/:cid',
+        destination: `${process.env.APIGW_HOST}/plugins/:gid/summary/:cid`,
+      },
     ];
   },
 };

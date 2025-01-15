@@ -4,10 +4,9 @@ import React, { useState, useEffect, useRef } from 'react';
 import dynamic from 'next/dynamic';
 import { useChecklist } from '../hooks/useChecklist';
 import { useMDXBundle } from '../hooks/useMDXBundle';
-import { useChecklistMutation } from '../hooks/useChecklistMutation';
 import { Skeleton } from '../utils/Skeletion';
 import { Alert, AlertDescription } from '../utils/Alert';
-import { Card } from '@/lib/components/card/card';
+import { Modal } from '@/lib/components/modal';
 import type { MDXProps } from '../utils/types';
 import * as ReactJSXRuntime from 'react/jsx-runtime';
 import styles from './ChecklistDetail.module.css';
@@ -33,20 +32,17 @@ const ChecklistDetail: React.FC<ChecklistDetailProps> = ({ id }) => {
   const updateMutation = useUpdateChecklist();
   const [localData, setLocalData] = useState(checklistData?.data || {});
   const [isSaving, setIsSaving] = useState(false);
+  const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
   const [lastSaved, setLastSaved] = useState<Date | null>(null);
+  const [showSaveModal, setShowSaveModal] = useState(false);
+  const [showClearModal, setShowClearModal] = useState(false);
   const autoSaveTimeout = useRef<NodeJS.Timeout | null>(null);
-  const hasUnsavedChanges = useRef(false);
 
   useEffect(() => {
     setLocalData(checklistData?.data || {});
+    setHasUnsavedChanges(false);
   }, [checklistData]);
 
-  // Clean up timeout on unmount
-  useEffect(() => {
-    setLocalData(checklistData?.data || {});
-  }, [checklistData]);
-
-  // Clean up timeout on unmount
   useEffect(() => {
     return () => {
       if (autoSaveTimeout.current) {
@@ -65,10 +61,12 @@ const ChecklistDetail: React.FC<ChecklistDetailProps> = ({ id }) => {
         data: {
           data: localData,
           name: checklistData.name,
+          group: checklistData.group,
         },
       });
       setLastSaved(new Date());
-      hasUnsavedChanges.current = false;
+      setHasUnsavedChanges(false);
+      setShowSaveModal(true); // Show save success modal
     } catch (error) {
       console.error('Error saving changes:', error);
     } finally {
@@ -85,7 +83,7 @@ const ChecklistDetail: React.FC<ChecklistDetailProps> = ({ id }) => {
     };
 
     setLocalData(newData);
-    hasUnsavedChanges.current = true;
+    setHasUnsavedChanges(true);
 
     // Auto-save logic
     if (autoSaveTimeout.current) {
@@ -94,27 +92,25 @@ const ChecklistDetail: React.FC<ChecklistDetailProps> = ({ id }) => {
 
     autoSaveTimeout.current = setTimeout(() => {
       saveChanges();
-    }, 2000); // 2 second debounce delay
+    }, 10000); // 2 second debounce delay
   };
 
   const handleClearFields = () => {
-    if (window.confirm('Are you sure you want to clear all fields?')) {
-      // Create a new object with the same keys but empty string values
-      const clearedData = Object.keys(localData).reduce(
-        (acc, key) => {
-          acc[key] = '';
-          return acc;
-        },
-        {} as Record<string, string>
-      );
+    setShowClearModal(false); // Close confirmation modal
 
-      setLocalData(clearedData);
-      hasUnsavedChanges.current = true;
+    const clearedData = Object.keys(localData).reduce(
+      (acc, key) => {
+        acc[key] = '';
+        return acc;
+      },
+      {} as Record<string, string>
+    );
 
-      // Clear any pending auto-save
-      if (autoSaveTimeout.current) {
-        clearTimeout(autoSaveTimeout.current);
-      }
+    setLocalData(clearedData);
+    setHasUnsavedChanges(true);
+
+    if (autoSaveTimeout.current) {
+      clearTimeout(autoSaveTimeout.current);
     }
   };
 
@@ -176,19 +172,24 @@ const ChecklistDetail: React.FC<ChecklistDetailProps> = ({ id }) => {
           <h1 className="text-2xl font-bold">{checklistData.name}</h1>
           <div className="flex items-center gap-4">
             {lastSaved && (
-              <span className="text-seconday-500 text-sm">
+              <span className="text-sm text-secondary-500">
                 Last saved: {lastSaved.toLocaleString()}
               </span>
             )}
             <button
-              className="rounded bg-[#392348] px-4 py-2 font-semibold text-white hover:bg-[#392348]"
+              className={`rounded px-4 py-2 font-semibold ${
+                hasUnsavedChanges
+                  ? 'cursor-pointer bg-primary-700 text-white hover:bg-primary-600'
+                  : 'cursor-not-allowed bg-secondary-700 text-secondary-500'
+              } disabled:cursor-not-allowed disabled:bg-secondary-700 disabled:text-secondary-500`}
               onClick={saveChanges}
-              disabled={isSaving || !hasUnsavedChanges.current}>
+              disabled={!hasUnsavedChanges}>
               {isSaving ? 'Saving...' : 'Save'}
             </button>
+
             <button
               className="rounded border border-gray-300 px-4 py-2 font-semibold text-gray-700 hover:bg-secondary-400"
-              onClick={handleClearFields}>
+              onClick={() => setShowClearModal(true)}>
               Clear Fields
             </button>
           </div>
@@ -202,6 +203,23 @@ const ChecklistDetail: React.FC<ChecklistDetailProps> = ({ id }) => {
         data={localData}
         onChangeData={handleDataChange}
       />
+
+      {/* Clear Fields Confirmation Modal */}
+      {showClearModal && (
+        <Modal
+          heading="Confirm Clear"
+          onCloseIconClick={() => setShowClearModal(false)}
+          primaryBtnLabel="Yes, Clear"
+          secondaryBtnLabel="Cancel"
+          onPrimaryBtnClick={handleClearFields}
+          onSecondaryBtnClick={() => setShowClearModal(false)}
+          enableScreenOverlay>
+          <p className="text-center text-lg">
+            Are you sure you want to clear all fields? This action cannot be
+            undone.
+          </p>
+        </Modal>
+      )}
     </div>
   );
 };

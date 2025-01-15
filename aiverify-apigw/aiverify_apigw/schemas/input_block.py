@@ -111,6 +111,11 @@ class InputBlockDataUpdate(BaseModel):
         max_length=128,
     )
     data: dict = Field(description="User data")
+    group: str = Field(
+        description="Group name for this input block data",
+        min_length=1,
+        max_length=128,
+    )
 
     model_config = {
         "json_schema_extra": {

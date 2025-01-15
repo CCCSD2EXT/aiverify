@@ -14,8 +14,8 @@ type FilterProps = {
 
 export default function ChecklistsFilters({ onSearch, onSort }: FilterProps) {
   const sortOptions = [
-    { id: 'date-asc', name: 'Installed Date (oldest to newest)' },
-    { id: 'date-desc', name: 'Installed Date (newest to oldest)' },
+    { id: 'date-asc', name: 'Updated Date (oldest to newest)' },
+    { id: 'date-desc', name: 'Updated Date (newest to oldest)' },
     { id: 'name', name: 'Name (A-Z)' },
   ];
   const [selectedPill, setSelectedPill] = useState<string | null>(null);
@@ -30,9 +30,9 @@ export default function ChecklistsFilters({ onSearch, onSort }: FilterProps) {
     <section className="flex justify-between">
       {/* Search Bar */}
       <div>
-        <div className="relative flex w-full items-center">
+        <div className="relative flex w-full items-start">
           <TextInput
-            placeholder="Search Models"
+            placeholder="Search"
             inputStyles={{
               paddingLeft: 40,
               height: '40px',
@@ -73,7 +73,7 @@ export default function ChecklistsFilters({ onSearch, onSort }: FilterProps) {
         </div>
       </div>
       {/* Sort Dropdown */}
-      <div className="flex items-center">
+      <div className="flex items-start">
         <Dropdown
           id="sort-dropdown"
           data={sortOptions}

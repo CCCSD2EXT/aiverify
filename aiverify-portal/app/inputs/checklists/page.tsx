@@ -1,10 +1,9 @@
 import { Icon, IconName } from '@/lib/components/IconSVG';
 import { getChecklists } from '@/lib/fetchApis/getAllChecklists';
-import ActionButtons from '@/app/inputs/components/ActionButtons';
+import ActionButtons from './components/ActionButtons';
 import Link from 'next/link';
 import { ChevronLeftIcon } from '@/app/inputs/utils/icons';
 import GroupList from './components/GroupList';
-import { Checklist } from '../utils/types';
 
 export default async function ResultsPage() {
   const checklists = await getChecklists();

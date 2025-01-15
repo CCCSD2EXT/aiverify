@@ -5,7 +5,7 @@ import { Checklist } from '@/app/inputs/utils/types';
 const updateChecklist = async (
   variables: {
     id: string;
-    data: { data: Record<string, string>; name: string };
+    data: { data: Record<string, string>; name: string; group: string };
   },
   context?: unknown // Add the second argument for context
 ) => {
@@ -31,7 +31,10 @@ const useUpdateChecklist = () => {
   return useMutation<
     any,
     Error,
-    { id: string; data: { data: Record<string, string>; name: string } },
+    {
+      id: string;
+      data: { data: Record<string, string>; name: string; group: string };
+    },
     unknown
   >({
     mutationFn: updateChecklist, // Mutation function accepts 'variables' and 'context'

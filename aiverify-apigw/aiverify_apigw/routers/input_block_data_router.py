@@ -79,6 +79,7 @@ def update_input_block_data(inputblock_id: int, ibdata: InputBlockDataUpdate, se
             raise HTTPException(status_code=404, detail="InputBlockData not found")
                 
         input_block_data.name = ibdata.name
+        input_block_data.group = ibdata.group
         input_block_data.data = json.dumps(ibdata.data).encode('utf-8')
         input_block_data.updated_at = datetime.now(timezone.utc)
         
