@@ -10,7 +10,7 @@ import Link from 'next/link';
 import { ChevronLeftIcon } from '@/app/inputs/utils/icons';
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import SplitPane from './components/SplitPane';
-import ProgressSidebarList from './components/ProgressSidebar';
+import ProgressBar from './components/ProgressSidebar';
 import GroupHeader from './components/GroupNameHeader';
 import ChecklistsFilters from '../../components/FilterButtons';
 import Fuse from 'fuse.js';
@@ -123,10 +123,10 @@ export default function GroupDetailPage() {
               </div>
               <ActionButtons />
             </div>
-            <div className="mt-6 h-full overflow-hidden rounded bg-secondary-950">
+            <div className="scrollbar-hidden mt-6 h-full overflow-y-auto rounded bg-secondary-950">
               <GroupHeader groupName={groupName} />
               <SplitPane
-                leftPane={<ProgressSidebarList groupName={groupName} />}
+                leftPane={<ProgressBar groupName={groupName} />}
                 rightPane={
                   <div className="flex h-full flex-col">
                     <ChecklistsFilters

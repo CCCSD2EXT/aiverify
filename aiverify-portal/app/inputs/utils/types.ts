@@ -18,3 +18,10 @@ export type Checklist = {
 export type GroupedChecklists = {
   [groupName: string]: Checklist[]; // Groups of checklists, keyed by the group name
 };
+
+export type ChecklistProgress = {
+  id: string;
+  name: string;
+  isCompleted: boolean;
+  progress: number;
+};

@@ -1,16 +1,24 @@
 'use client';
 import React, { useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { useChecklists } from '@/app/inputs/context/ChecklistsContext';
-import { WarningCircleIcon, CheckCircleIcon } from '../utils/icons';
-import { useMDXSummaryBundle } from '../hooks/useMDXSummaryBundle';
+import { useChecklists } from '@/app/inputs/checklists/upload/context/ChecklistsContext';
+import {
+  WarningCircleIcon,
+  CheckCircleIcon,
+} from '../../[groupId]/utils/icons';
+import { useMDXSummaryBundle } from '../../[groupId]/hooks/useMDXSummaryBundle';
 import * as ReactJSXRuntime from 'react/jsx-runtime';
 
-const ProgressBar: React.FC<{ groupName: string }> = ({ groupName }) => {
-  const { checklists, setSelectedChecklist } = useChecklists();
+const ProgressBar: React.FC = () => {
+  const { checklists, selectedGroup } = useChecklists();
 
-  const groupChecklists = checklists.filter(
-    (checklist) => checklist.group.toLowerCase() === groupName.toLowerCase()
+  if (!selectedGroup) {
+    return <div>Please select or create a group to view progress.</div>; // Add a prompt for group selection
+  }
+
+  const groupChecklists = useMemo(
+    () => checklists.filter((c) => c.group === selectedGroup),
+    [checklists, selectedGroup]
   );
 
   return (
@@ -42,19 +50,18 @@ const ProgressBar: React.FC<{ groupName: string }> = ({ groupName }) => {
             );
             const moduleExports = moduleFactory(...Object.values(context));
             const progressFn = moduleExports.progress;
-            const progress = progressFn(checklist.data);
-            return progress;
+            return progressFn ? progressFn(checklist.data) : 0;
           } catch (error) {
             console.error('Error parsing MDX code:', error);
             return null;
           }
-        }, [mdxSummaryBundle]);
+        }, [mdxSummaryBundle, checklist.data]);
 
         const isCompleted = progressData === 100;
 
         return (
           <div
-            key={checklist.id}
+            key={checklist.cid}
             className="flex cursor-pointer items-center justify-between rounded bg-secondary-950 p-1 hover:bg-secondary-900">
             <div className="flex items-center gap-1">
               {isCompleted ? (
@@ -72,9 +79,6 @@ const ProgressBar: React.FC<{ groupName: string }> = ({ groupName }) => {
                 {checklist.name}
               </span>
             </div>
-            {/* <span className="text-sm font-semibold text-gray-500">
-              {progressData ?? 0}%
-            </span> */}
           </div>
         );
       })}
