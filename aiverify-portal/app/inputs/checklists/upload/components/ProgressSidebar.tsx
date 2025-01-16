@@ -1,6 +1,7 @@
 'use client';
-import React, { useMemo } from 'react';
-import { useRouter } from 'next/navigation';
+// ProgressBar.tsx
+'use client';
+import React, { useMemo, useEffect } from 'react';
 import { useChecklists } from '@/app/inputs/checklists/upload/context/ChecklistsContext';
 import {
   WarningCircleIcon,
@@ -10,10 +11,21 @@ import { useMDXSummaryBundle } from '../../[groupId]/hooks/useMDXSummaryBundle';
 import * as ReactJSXRuntime from 'react/jsx-runtime';
 
 const ProgressBar: React.FC = () => {
-  const { checklists, selectedGroup } = useChecklists();
+  const { checklists, selectedGroup, setChecklists } = useChecklists();
+
+  // Load persisted data once on mount
+  useEffect(() => {
+    const savedData = localStorage.getItem('checklistData');
+    if (savedData) {
+      const parsedData = JSON.parse(savedData);
+      if (parsedData.checklists) {
+        setChecklists(parsedData.checklists);
+      }
+    }
+  }, []); // Empty dependency array ensures it only runs once
 
   if (!selectedGroup) {
-    return <div>Please select or create a group to view progress.</div>; // Add a prompt for group selection
+    return <div>Please select or create a group to view progress.</div>;
   }
 
   const groupChecklists = useMemo(
