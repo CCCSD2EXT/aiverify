@@ -74,7 +74,7 @@ const ProgressBar: React.FC = () => {
         return (
           <div
             key={checklist.cid}
-            className="flex cursor-pointer items-center justify-between rounded bg-secondary-950 p-1 hover:bg-secondary-900">
+            className="flex cursor-pointer items-center justify-between rounded bg-secondary-950 p-1">
             <div className="flex items-center gap-1">
               {isCompleted ? (
                 <CheckCircleIcon
