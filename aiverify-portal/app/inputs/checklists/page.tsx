@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { ChevronLeftIcon } from '@/app/inputs/utils/icons';
 import GroupList from './components/GroupList';
 
-export default async function ResultsPage() {
+export default async function ChecklistsPage() {
   const checklists = await getAllChecklists();
 
   return (
