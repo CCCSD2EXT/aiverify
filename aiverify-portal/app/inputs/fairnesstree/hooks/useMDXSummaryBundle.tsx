@@ -15,7 +15,7 @@ interface MDXBundle {
 
 export const useMDXSummaryBundle = (gid?: string, cid?: string) => {
   return useQuery<MDXBundle>({
-    queryKey: ['mdxBundle', gid, cid],
+    queryKey: ['mdxSummary', gid, cid],
     enabled: !!gid && !!cid,
     queryFn: async () => {
       try {

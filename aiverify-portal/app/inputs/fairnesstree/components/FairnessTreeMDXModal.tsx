@@ -1,12 +1,13 @@
 'use client';
 
-import React, { useMemo } from 'react';
-import { Modal } from '@/lib/components/modal';
-import { useMDXBundle } from '@/app/inputs/fairnesstree/hooks/useMDXBundle';
-import * as ReactJSXRuntime from 'react/jsx-runtime';
-import { FairnessTree } from '@/app/inputs/utils/types';
-import dynamic from 'next/dynamic';
 import { DecisionTree } from 'aiverify-shared-library/graph';
+import { getMDXComponent } from 'mdx-bundler/client';
+import dynamic from 'next/dynamic';
+import React, { useMemo } from 'react';
+import * as ReactJSXRuntime from 'react/jsx-runtime';
+import { useMDXBundle } from '@/app/inputs/fairnesstree/hooks/useMDXBundle';
+import { FairnessTree } from '@/app/inputs/utils/types';
+import { Modal } from '@/lib/components/modal';
 
 const FairnessTreeMDXModal: React.FC<{
   tree: FairnessTree;
@@ -19,32 +20,43 @@ const FairnessTreeMDXModal: React.FC<{
     error,
   } = useMDXBundle(tree.gid, tree.cid);
 
-  const MDXComponent = useMemo(() => {
-    if (!mdxBundle?.code) return null;
+  // const MDXComponent = useMemo(() => {
+  //   if (!mdxBundle?.code) return null;
 
-    try {
-      const context = {
-        React,
-        jsx: ReactJSXRuntime.jsx,
-        jsxs: ReactJSXRuntime.jsxs,
-        _jsx_runtime: ReactJSXRuntime,
-        Fragment: ReactJSXRuntime.Fragment,
-      };
-
-      const moduleFactory = new Function(
-        ...Object.keys(context),
-        `${mdxBundle.code}`
+  const Component = useMemo(() => {
+    if (!mdxBundle) {
+      const MissingMdxMessage = () => (
+        <div>{`${tree.name} - ${tree.cid} : Missing mdx`}</div>
       );
-      const moduleExports = moduleFactory(...Object.values(context));
-
-      console.log(moduleExports.default);
-
-      return moduleExports;
-    } catch (error) {
-      console.error('Error creating MDX component:', error);
-      return null;
+      MissingMdxMessage.displayName = 'MissingMdxMessage';
+      return MissingMdxMessage;
     }
+    return getMDXComponent(mdxBundle.code);
   }, [mdxBundle]);
+
+  // try {
+  //   const context = {
+  //     React,
+  //     jsx: ReactJSXRuntime.jsx,
+  //     jsxs: ReactJSXRuntime.jsxs,
+  //     _jsx_runtime: ReactJSXRuntime,
+  //     Fragment: ReactJSXRuntime.Fragment,
+  //   };
+
+  //   const moduleFactory = new Function(
+  //     ...Object.keys(context),
+  //     `${mdxBundle.code}`
+  //   );
+  //   const moduleExports = moduleFactory(...Object.values(context));
+
+  //   console.log(moduleExports.default);
+
+  //   return moduleExports;
+  // } catch (error) {
+  //   console.error('Error creating MDX component:', error);
+  //   return null;
+  // }
+  // }, [mdxBundle]);
 
   if (isLoading) {
     return <div className="text-sm text-gray-400">Loading...</div>;
@@ -54,9 +66,9 @@ const FairnessTreeMDXModal: React.FC<{
     return <div className="text-sm text-red-400">Error loading content</div>;
   }
 
-  if (!MDXComponent) {
-    return <div className="text-sm text-gray-400">No content available</div>;
-  }
+  // if (!MDXComponent) {
+  //   return <div className="text-sm text-gray-400">No content available</div>;
+  // }
 
   return (
     <Modal
@@ -66,9 +78,10 @@ const FairnessTreeMDXModal: React.FC<{
       width={800}
       height={600}>
       <div className="h-full overflow-auto">
-        {React.createElement(MDXComponent.default, {
+        {/* {React.createElement(MDXComponent.default, {
           data: tree.data,
-        })}
+        })} */}
+        <Component data={tree.data} />
       </div>
     </Modal>
   );
