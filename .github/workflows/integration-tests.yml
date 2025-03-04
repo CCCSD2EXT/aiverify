@@ -226,12 +226,9 @@ jobs:
       - name: Run smoke tests
         if: ${{ ! cancelled() }}
         run: |
-          ls
           cd qa-test/smoke-testing
           npm install
           npx playwright install --with-deps
-          ls
-          pwd
           ENVIRONMENT_URL=https://127.0.0.1 npx playwright test tests/02-plugin.spec.js
 
       # - name: Run frontend tests
@@ -254,7 +251,7 @@ jobs:
         with:
           name: playwright-trace-v1.0-smoke-testing-${{ github.run_id }}
           path: |
-            /home/runner/work/aiverify/qa-test/smoke-testing/test-results
+            /home/runner/work/aiverify/aiverify/qa-test/smoke-testing/test-results/
 
       - name: Show logs
         if: ${{ ! cancelled() }}
