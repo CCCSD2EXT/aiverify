@@ -146,7 +146,7 @@ jobs:
         run: |
           mkdir -p ai-verify-portal/plugins
           cd stock-plugins
-          rm aiverify.stock.shap-toolbox/dist/aiverify.stock.shap-toolbox-0.10.0.zip
+          rm aiverify.stock.shap-toolbox/dist/aiverify.stock.shap_toolbox-0.10.0.zip
           for plugin_dir in *; do
             echo "Unzipping plugin $plugin_dir";
             unzip $plugin_dir/dist/*.zip -d ../ai-verify-portal/plugins/$plugin_dir;
