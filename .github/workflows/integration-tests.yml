@@ -245,6 +245,14 @@ jobs:
       #     npm install
       #     BASEDIR=${{ github.workspace }} npx playwright test
 
+      - name: Upload Playwright Traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-trace-v1.0-smoke-testing-${{ github.run_id }}
+          path: |
+            /home/runner/work/aiverify/aiverify/smoke-testing/test-results
+
       - name: Show logs
         if: ${{ ! cancelled() }}
         run: |
@@ -254,11 +262,3 @@ jobs:
           cat ai-verify-apigw/apigw.log
           echo "================= Start of portal log ================="
           cat ai-verify-portal/portal.log
-
-      - name: Upload Playwright Traces
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: playwright-trace-v1.0-smoke-testing-${{ github.run_id }}
-          path: |
-            /home/runner/work/aiverify/aiverify/smoke-testing/test-results
