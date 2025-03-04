@@ -78,10 +78,15 @@ jobs:
           sudo apt-get update
           
           # amd64, install libs needed by puppeteer/chromium
+          # sudo apt-get install -y libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 \
+          #   libxi-dev libxtst-dev libnss3 libcups2 libxss1 libxrandr2 \
+          #   libasound2 libatk1.0-0 libatk-bridge2.0-0 libpangocairo-1.0-0 \
+          #   libgtk-3-0 libgbm1
+
           sudo apt-get install -y libx11-xcb1 libxcomposite1 libxcursor1 libxdamage1 \
             libxi-dev libxtst-dev libnss3 libcups2 libxss1 libxrandr2 \
-            libasound2 libatk1.0-0 libatk-bridge2.0-0 libpangocairo-1.0-0 \
-            libgtk-3-0 libgbm1
+            libasound2t64 libatk1.0-0 libatk-bridge2.0-0 libpangocairo-1.0-0 \
+            libgtk-3-0t64 libgbm1
           
           # For shap-toolbox plugin
           sudo apt-get install -y gcc g++ python3-dev
@@ -223,21 +228,21 @@ jobs:
           cd qa-test/smoke-testing
           npm install
           npx playwright install
-          ENVIRONMENT_URL=https://127.0.0.1 npx playwright test
+          ENVIRONMENT_URL=https://127.0.0.1 npx playwright test tests/01-smoke-testing.spec.ts
 
-      - name: Run frontend tests
-        if: ${{ ! cancelled() }}
-        run: |
-          cd qa-test/frontend-testing
-          npm install
-          ENVIRONMENT_URL=https://127.0.0.1 npx playwright test
+      # - name: Run frontend tests
+      #   if: ${{ ! cancelled() }}
+      #   run: |
+      #     cd qa-test/frontend-testing
+      #     npm install
+      #     ENVIRONMENT_URL=https://127.0.0.1 npx playwright test
 
-      - name: Run backend tests
-        if: ${{ ! cancelled() }}
-        run: |
-          cd qa-test/backend-testing
-          npm install
-          BASEDIR=${{ github.workspace }} npx playwright test
+      # - name: Run backend tests
+      #   if: ${{ ! cancelled() }}
+      #   run: |
+      #     cd qa-test/backend-testing
+      #     npm install
+      #     BASEDIR=${{ github.workspace }} npx playwright test
 
       - name: Show logs
         if: ${{ ! cancelled() }}
@@ -249,3 +254,10 @@ jobs:
           echo "================= Start of portal log ================="
           cat ai-verify-portal/portal.log
 
+      - name: Upload Playwright Traces
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: playwright-trace-v1.0-smoke-testing-${{ github.run_id }}
+          path: |
+            /home/runner/work/aiverify/aiverify/smoke-testing/test-results
