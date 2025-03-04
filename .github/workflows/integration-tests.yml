@@ -226,12 +226,13 @@ jobs:
       - name: Run smoke tests
         if: ${{ ! cancelled() }}
         run: |
+          ls
           cd qa-test/smoke-testing
           npm install
           npx playwright install --with-deps
-          ENVIRONMENT_URL=https://127.0.0.1 npx playwright test tests/02-plugin.spec.js
-          pwd
           ls
+          pwd
+          ENVIRONMENT_URL=https://127.0.0.1 npx playwright test tests/02-plugin.spec.js
 
       # - name: Run frontend tests
       #   if: ${{ ! cancelled() }}
